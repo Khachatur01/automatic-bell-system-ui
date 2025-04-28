@@ -1,0 +1,31 @@
+<form>
+    <mat-form-field class="example-chip-list">
+        <mat-label> {{ label() }} </mat-label>
+        <mat-chip-grid #chipGrid aria-label="Fruit selection">
+            @for (value of usedValues(); track $index) {
+                <mat-chip-row (removed)="remove(value)">
+                    {{ value }}
+                    <button matChipRemove [attr.aria-label]="'remove ' + value">
+                        <mat-icon>cancel</mat-icon>
+                    </button>
+                </mat-chip-row>
+            }
+        </mat-chip-grid>
+        <input
+            name="currentValue"
+            [placeholder]="placeholder()"
+            #valueInput
+            oninput="this.value=''"
+            [(ngModel)]="currentValue"
+            [matChipInputFor]="chipGrid"
+            [matAutocomplete]="auto"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="add($event)"
+        />
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="use($event); valueInput.value = ''">
+            @for (value of unusedValues(); track value) {
+                <mat-option [value]="value"> {{ value }} </mat-option>
+            }
+        </mat-autocomplete>
+    </mat-form-field>
+</form>

@@ -1,0 +1,21 @@
+<div class="alarms-list">
+    @let groupedAlarms = alarms() | groupByOutputIndex | keyvalue;
+
+    @for (groupedAlarm of groupedAlarms; track $index) {
+        @let alarms = groupedAlarm.value;
+
+        <hr style="width: 100%"/>
+
+        @for (alarmWithId of alarms; track $index) {
+            <div style="display: flex">
+                <widget-display-alarm style="width: 100%" [alarmWithId]="alarmWithId"></widget-display-alarm>
+
+                <button style="margin-left: 10px; align-self: center" mat-fab (click)="openDeleteDialog(alarmWithId)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        }
+    } @empty {
+        <p>No alarms available.</p>
+    }
+</div>

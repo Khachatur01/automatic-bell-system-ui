@@ -1,0 +1,90 @@
+@let identifier = alarmWithId().id.identifier;
+@let alarm = alarmWithId().alarm;
+
+<div class="alarm-card">
+    <div class="alarm-detail">
+        <strong>Identifier:</strong> {{ identifier }}
+    </div>
+    <div class="alarm-detail">
+        <strong>Impulse Length:</strong> {{ alarm.impulse_length_millis }} Milliseconds
+    </div>
+
+    <div class="alarm-segments">
+        <div class="segment">
+            <strong>Year:</strong>
+
+            @let yearSegments = alarm.year | matcherSegments;
+
+            <p> {{ alarm.year | matcherLabel }} </p>
+            @if (yearSegments.length > 0) {
+                <span> {{ yearSegments | join: ', ' }} </span>
+            }
+        </div>
+
+        <div class="segment">
+            <strong>Month:</strong>
+
+            @let monthSegments = alarm.month | matcherSegments;
+
+            <p> {{ alarm.month | matcherLabel }} </p>
+            @if (monthSegments.length > 0) {
+                <span> {{ monthSegments | join: ', ' }} </span>
+            }
+        </div>
+
+        <div class="segment">
+            <strong>Month Day:</strong>
+
+            @let monthDaySegments = alarm.month_day | matcherSegments;
+
+            <p> {{ alarm.month_day | matcherLabel }} </p>
+            @if (monthDaySegments.length > 0) {
+                <span> {{ monthDaySegments | join: ', ' }} </span>
+            }
+        </div>
+
+        <div class="segment">
+            <strong>Week Day:</strong>
+
+            @let weekDaySegments = alarm.week_day | matcherSegments;
+
+            <p> {{ alarm.week_day | matcherLabel }} </p>
+            @if (weekDaySegments.length > 0) {
+                <span> {{ weekDaySegments | join: ', ' }} </span>
+            }
+        </div>
+
+        <div class="segment">
+            <strong>Hour:</strong>
+
+            @let hourSegments = alarm.hour | matcherSegments;
+
+            <p> {{ alarm.hour | matcherLabel }} </p>
+            @if (hourSegments.length > 0) {
+                <span> {{ hourSegments | join: ', ' }} </span>
+            }
+        </div>
+
+        <div class="segment">
+            <strong>Minute:</strong>
+
+            @let minuteSegments = alarm.minute | matcherSegments;
+
+            <p> {{ alarm.minute | matcherLabel }} </p>
+            @if (minuteSegments.length > 0) {
+                <span> {{ minuteSegments | join: ', ' }} </span>
+            }
+        </div>
+
+        <div class="segment">
+            <strong>Second:</strong>
+
+            @let secondSegments = alarm.second | matcherSegments;
+
+            <p> {{ alarm.second | matcherLabel }} </p>
+            @if (secondSegments.length > 0) {
+                <span> {{ secondSegments | join: ', ' }} </span>
+            }
+        </div>
+    </div>
+</div>

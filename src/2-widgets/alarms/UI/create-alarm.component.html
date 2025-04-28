@@ -1,0 +1,62 @@
+<h1> Create new alarm </h1>
+
+<div class="alarm-card">
+
+    <span>Select output index</span>
+    <mat-button-toggle-group [(ngModel)]="outputIndex" aria-label="Font Style" style="margin: 10px">
+        @for (validOutputIndex of validOutputIndexes; track validOutputIndex) {
+            <mat-button-toggle [value]="validOutputIndex"> Output {{ validOutputIndex }} </mat-button-toggle>
+        }
+    </mat-button-toggle-group>
+
+    <br>
+    <mat-form-field style="width: 120px">
+        <mat-label>Impulse Length</mat-label>
+        <input matInput (input)="onImpulseLengthInput($event)" [value]="impulseLength">
+    </mat-form-field> Milliseconds
+
+    <div class="alarm-segments">
+        @for (segment of segments; track $index) {
+            @let segmentType = segment.type;
+            @let alarmMatcher = segment.alarmMatcher;
+            @let validValues = segment.validValues;
+            @let label = segmentType | segmentTitle;
+            @let placeholder = 'New ' + (segmentType | segmentTitle) + ' ...';
+
+            <div class="segment">
+                <strong> {{ label }} </strong>
+
+                <mat-card appearance="outlined" style="width: 100%">
+                    <mat-card-header>
+                        <mat-card-title> Matcher </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <mat-button-toggle-group name="matcher" aria-label="Font Style" style="margin-bottom: 1rem"
+                                                 [value]="validMatcherTypes[0]"
+                                                 (change)="changeSegmentMatcher(segmentType, $event.value)">
+                            @for (matcherType of validMatcherTypes; track $index) {
+                                <mat-button-toggle [value]="matcherType"> {{ matcherType }} </mat-button-toggle>
+                            }
+                        </mat-button-toggle-group>
+
+                        @switch (alarmMatcher.tag) {
+                            @case (AlarmMatcherType.MATCH) {
+                                <widget-segment-input [values]="validValues" [label]="label" [placeholder]="placeholder"></widget-segment-input>
+                            }
+                            @case (AlarmMatcherType.DO_NOT_MATCH) {
+                                <widget-segment-input [values]="validValues" [label]="label" [placeholder]="placeholder"></widget-segment-input>
+                            }
+                        }
+                    </mat-card-content>
+                </mat-card>
+            </div>
+
+            <hr style="width: 100%"/>
+        }
+    </div>
+
+    <button (click)="createAlarm()" mat-fab extended>
+        <mat-icon>alarm_add</mat-icon>
+        Create Alarm
+    </button>
+</div>

@@ -1,0 +1,21 @@
+.alarm-card {
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.alarm-detail {
+    margin-bottom: 0.5rem;
+}
+
+.alarm-segments {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-rows: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.5rem;
+}
+
+.segment {
+    font-size: 0.9rem;
+}
