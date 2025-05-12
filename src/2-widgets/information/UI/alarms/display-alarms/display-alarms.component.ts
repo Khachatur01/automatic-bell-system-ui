@@ -1,4 +1,4 @@
-import { Component, input, InputSignal } from '@angular/core';
+import { Component, EventEmitter, input, InputSignal, Output } from '@angular/core';
 import { AlarmWithId } from '@entities/alarm';
 import { GroupByOutputIndexPipe } from '@widgets/information/UI/alarms/pipe/group-by-output-index.pipe';
 import { KeyValuePipe } from '@angular/common';
@@ -9,6 +9,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {
     DeleteAlarmDialogComponent
 } from '@widgets/information/UI/alarms/delete-alarm-dialog/delete-alarm-dialog.component';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
     selector: 'widget-display-alarms',
@@ -24,17 +25,24 @@ import {
     styleUrl: './display-alarms.component.css',
 })
 export class DisplayAlarmsComponent {
+    @Output()
+    public readonly alarmDeleted: EventEmitter<AlarmWithId> = new EventEmitter<AlarmWithId>();
+
     public readonly alarms: InputSignal<AlarmWithId[]> = input.required();
 
-    public constructor(private readonly dialog: MatDialog) {}
+    public constructor(
+        private readonly dialog: MatDialog
+    ) {}
 
-    protected openDeleteDialog(alarmWithId: AlarmWithId): void {
+    protected async openDeleteDialog(alarmWithId: AlarmWithId): Promise<void> {
         const dialogRef: MatDialogRef<DeleteAlarmDialogComponent> = this.dialog.open(DeleteAlarmDialogComponent, {
             data: { alarmWithId, },
         });
 
-        dialogRef.afterClosed().subscribe((deleted: boolean): void => {
-            console.log(`Dialog result: ${ deleted }`);
-        });
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const deleted: boolean = await lastValueFrom(dialogRef.afterClosed());
+        if (deleted) {
+            this.alarmDeleted.emit(alarmWithId);
+        }
     }
 }

@@ -1,14 +1,4 @@
-import {
-    Component,
-    computed,
-    inject,
-    InputSignal,
-    model,
-    ModelSignal,
-    Signal,
-    signal,
-    WritableSignal
-} from '@angular/core';
+import { Component, computed, inject, InputSignal, model, ModelSignal, Signal } from '@angular/core';
 import { MatChipGrid, MatChipInput, MatChipInputEvent, MatChipRemove, MatChipRow } from '@angular/material/chips';
 import {
     MatAutocomplete,
@@ -44,11 +34,11 @@ export class SegmentInputComponent {
     public label: InputSignal<string> = model.required();
     public placeholder: InputSignal<string> = model.required();
     public values: InputSignal<unknown[]> = model.required();
+    public usedValues: ModelSignal<unknown[]> = model.required();
 
     protected readonly announcer: LiveAnnouncer = inject(LiveAnnouncer);
     protected readonly separatorKeysCodes: number[] = [ ENTER, COMMA, ];
     protected readonly currentValue: ModelSignal<unknown> = model();
-    protected readonly usedValues: WritableSignal<unknown[]> = signal([]);
     protected readonly unusedValues: Signal<unknown[]> = computed((): unknown[] => {
         const usedValues: unknown[] = this.usedValues();
         return this.values().filter((value: unknown): boolean => !usedValues.includes(value));
@@ -72,7 +62,7 @@ export class SegmentInputComponent {
             }
 
             values.splice(index, 1);
-            this.announcer.announce(`Removed ${ value }`).then();
+            this.announcer.announce(`Removed ${ value }`);
             return [ ...values, ];
         });
     }

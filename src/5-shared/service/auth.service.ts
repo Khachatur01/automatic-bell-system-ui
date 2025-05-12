@@ -6,7 +6,10 @@ const ACCESS_TOKEN_KEY_HEADER: string = 'Access-Token';
 
 export function authHeader(): HttpHeaders {
     const token: string = localStorage.getItem(ACCESS_TOKEN_KEY_HEADER) || '';
-    return new HttpHeaders({ ACCESS_TOKEN_KEY_HEADER: token, });
+
+    return new HttpHeaders({
+        [ACCESS_TOKEN_KEY_HEADER]: token,
+    });
 }
 
 @Injectable({
@@ -21,6 +24,16 @@ export class AuthService {
         localStorage.setItem(ACCESS_TOKEN_KEY_HEADER, token);
 
         return token;
+    }
+
+    public async isAccessTokenValid(): Promise<boolean> {
+        try {
+            await firstValueFrom(this.http.post('/api/v1/access-token-validity', {}, { headers: authHeader(), responseType: 'text', }));
+            return true;
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
     }
 
     // eslint-disable-next-line class-methods-use-this

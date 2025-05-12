@@ -1,7 +1,6 @@
 <h1> Create new alarm </h1>
 
 <div class="alarm-card">
-
     <span>Select output index</span>
     <mat-button-toggle-group [(ngModel)]="outputIndex" aria-label="Font Style" style="margin: 10px">
         @for (validOutputIndex of validOutputIndexes; track validOutputIndex) {
@@ -16,7 +15,7 @@
     </mat-form-field> Milliseconds
 
     <div class="alarm-segments">
-        @for (segment of segments; track $index) {
+        @for (segment of segments; track segment.alarmMatcher) {
             @let segmentType = segment.type;
             @let alarmMatcher = segment.alarmMatcher;
             @let validValues = segment.validValues;
@@ -41,10 +40,10 @@
 
                         @switch (alarmMatcher.tag) {
                             @case (AlarmMatcherType.MATCH) {
-                                <widget-segment-input [values]="validValues" [label]="label" [placeholder]="placeholder"></widget-segment-input>
+                                <widget-segment-input [(usedValues)]="alarmMatcher.segments" [values]="validValues" [label]="label" [placeholder]="placeholder"></widget-segment-input>
                             }
                             @case (AlarmMatcherType.DO_NOT_MATCH) {
-                                <widget-segment-input [values]="validValues" [label]="label" [placeholder]="placeholder"></widget-segment-input>
+                                <widget-segment-input [(usedValues)]="alarmMatcher.segments" [values]="validValues" [label]="label" [placeholder]="placeholder"></widget-segment-input>
                             }
                         }
                     </mat-card-content>

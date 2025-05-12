@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Alarm, AlarmMatcher, Month, Segment, SegmentType, WeekDay } from '@entities/alarm';
 import { AlarmMatcherType, doNotMatch, ignore, match } from '@entities/alarm/model/alarm-matcher';
 import { SegmentInputComponent } from '@widgets/alarms/UI/segment-input/segment-input.component';
@@ -34,24 +34,24 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     templateUrl: './create-alarm.component.html',
     styleUrl: './create-alarm.component.css',
 })
-export class CreateAlarmComponent {
+export class CreateAlarmComponent implements OnInit {
     protected readonly AlarmMatcherType: typeof AlarmMatcherType = AlarmMatcherType;
 
     protected readonly validMatcherTypes: string[] = Object.values(AlarmMatcherType);
     protected validOutputIndexes: number[] = [];
 
     protected outputIndex: number = 0;
-    protected impulseLength: number = 0;
+    protected impulseLength: number = 5000;
 
     protected segments: Segment[] = CreateAlarmComponent.getInitialSegments();
 
     public constructor(
         private readonly alarmService: AlarmService,
         private readonly snackBar: MatSnackBar
-    ) {
-        this.alarmService.getValidOutputIndexes().then((outputIndexes: number[]): void => {
-            this.validOutputIndexes = outputIndexes;
-        });
+    ) {}
+
+    public async ngOnInit(): Promise<void> {
+        this.validOutputIndexes = await this.alarmService.getValidOutputIndexes();
     }
 
     protected changeSegmentMatcher(segmentType: SegmentType, matcherType: AlarmMatcherType): void {
@@ -90,16 +90,16 @@ export class CreateAlarmComponent {
     protected async createAlarm(): Promise<void> {
         // @ts-expect-error groupBy function of Object type is not yet stable feature
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-assignment
-        const groupedSegment: Record<SegmentType, Segment> = Object.groupBy(this.segments, (segment: Segment): SegmentType => segment.type);
+        const groupedSegment: Record<SegmentType, Segment[]> = Object.groupBy(this.segments, (segment: Segment): SegmentType => segment.type);
 
         const alarm: Alarm = {
-            year: groupedSegment[SegmentType.YEAR].alarmMatcher as AlarmMatcher<number>,
-            month: groupedSegment[SegmentType.MONTH].alarmMatcher as AlarmMatcher<Month>,
-            month_day: groupedSegment[SegmentType.MONTH_DAY].alarmMatcher as AlarmMatcher<number>,
-            week_day: groupedSegment[SegmentType.WEEK_DAY].alarmMatcher as AlarmMatcher<WeekDay>,
-            hour: groupedSegment[SegmentType.HOUR].alarmMatcher as AlarmMatcher<number>,
-            minute: groupedSegment[SegmentType.MINUTE].alarmMatcher as AlarmMatcher<number>,
-            second: groupedSegment[SegmentType.SECOND].alarmMatcher as AlarmMatcher<number>,
+            year: groupedSegment[SegmentType.YEAR][0].alarmMatcher as AlarmMatcher<number>,
+            month: groupedSegment[SegmentType.MONTH][0].alarmMatcher as AlarmMatcher<Month>,
+            month_day: groupedSegment[SegmentType.MONTH_DAY][0].alarmMatcher as AlarmMatcher<number>,
+            week_day: groupedSegment[SegmentType.WEEK_DAY][0].alarmMatcher as AlarmMatcher<WeekDay>,
+            hour: groupedSegment[SegmentType.HOUR][0].alarmMatcher as AlarmMatcher<number>,
+            minute: groupedSegment[SegmentType.MINUTE][0].alarmMatcher as AlarmMatcher<number>,
+            second: groupedSegment[SegmentType.SECOND][0].alarmMatcher as AlarmMatcher<number>,
             impulse_length_millis: this.impulseLength,
         };
 

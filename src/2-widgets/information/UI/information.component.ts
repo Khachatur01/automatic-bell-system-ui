@@ -9,6 +9,7 @@ import { DisplayAlarmsComponent } from '@widgets/information/UI/alarms/display-a
 import { AlarmService } from '@shared/service/alarm.service';
 import { MatButtonToggle, MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'widget-information',
@@ -35,17 +36,15 @@ export class InformationComponent implements OnInit {
     protected systemTimestamp?: Result<number, string>;
 
     public constructor(
+        private readonly snackBar: MatSnackBar,
         private readonly clockService: ClockService,
         private readonly alarmService: AlarmService
-    ) {
-        this.alarmService.getValidOutputIndexes().then((outputIndexes: number[]): void => {
-            this.validOutputIndexes = outputIndexes;
-        });
-
-        this.syncAlarmsByOutputIndex().then();
-    }
+    ) {}
 
     public async ngOnInit(): Promise<void> {
+        this.validOutputIndexes = await this.alarmService.getValidOutputIndexes();
+        await this.syncAlarmsByOutputIndex();
+
         await this.syncTime();
 
         setInterval(async(): Promise<void> => {
@@ -67,14 +66,16 @@ export class InformationComponent implements OnInit {
         } catch (err) {
             console.error(err);
             this.systemTimestamp = error(`Can't fetch system time`);
-
-            setTimeout((): void => {
-                this.systemTimestamp = ok(Date.now());
-            }, 200);
         }
     }
 
     protected async syncAlarmsByOutputIndex(): Promise<void> {
         this.alarms = await this.alarmService.getAlarms(this.outputIndex);
+    }
+
+    protected async alarmDeleted(alarmWithId: AlarmWithId): Promise<void> {
+        await this.alarmService.deleteAlarm(alarmWithId.id.output_index, alarmWithId.id.identifier);
+        this.snackBar.open('Alarm deleted successfully.', 'Close', { duration: 3000, });
+        await this.syncAlarmsByOutputIndex();
     }
 }

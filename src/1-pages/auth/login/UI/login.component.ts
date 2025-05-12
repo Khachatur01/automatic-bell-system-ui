@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@shared';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'page-login',
@@ -25,7 +26,12 @@ export class LoginComponent {
     protected form: FormGroup;
     protected loading: boolean = false;
 
-    public constructor(private readonly fb: FormBuilder, private readonly authService: AuthService, private readonly snackBar: MatSnackBar) {
+    public constructor(
+        private readonly fb: FormBuilder,
+        private readonly authService: AuthService,
+        private readonly snackBar: MatSnackBar,
+        private readonly router: Router
+    ) {
         this.form = this.fb.group({
             password: [ '', Validators.required, ],
         });
@@ -40,14 +46,13 @@ export class LoginComponent {
         const password: string = this.form.value.password;
 
         try {
-            const token: string = await this.authService.login(password);
+            await this.authService.login(password);
             this.loading = false;
             this.snackBar.open('Login successful!', 'Close', { duration: 3000, });
-            console.log('Access token:', token);
+            await this.router.navigate([ '/', ]);
         } catch (err) {
             this.loading = false;
             this.snackBar.open('Login failed.', 'Close', { duration: 3000, });
-            console.warn('Access token:', err);
         }
     }
 }

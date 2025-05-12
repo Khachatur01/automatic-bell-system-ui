@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { AlarmMatcher } from '@entities/alarm';
+import { AlarmMatcherType } from '@entities/alarm/model/alarm-matcher';
 
 @Pipe({
     name: 'matcherLabel',
@@ -8,14 +9,12 @@ export class MatcherLabelPipe implements PipeTransform {
     // eslint-disable-next-line class-methods-use-this
     public transform<T = void>(matcher: AlarmMatcher<T>): string {
         switch (matcher.tag) {
-            case 'Ignore':
+            case AlarmMatcherType.IGNORE:
                 return 'Ignore';
-            case 'Match':
+            case AlarmMatcherType.MATCH:
                 return 'Match';
-            case 'DoNotMatch':
+            case AlarmMatcherType.DO_NOT_MATCH:
                 return 'Do not match';
-            default:
-                return '';
         }
     }
 }

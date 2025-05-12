@@ -34,4 +34,4 @@
     }
 </mat-button-toggle-group>
 
-<widget-display-alarms [alarms]="alarms"></widget-display-alarms>
+<widget-display-alarms [alarms]="alarms" (alarmDeleted)="alarmDeleted($event)"></widget-display-alarms>

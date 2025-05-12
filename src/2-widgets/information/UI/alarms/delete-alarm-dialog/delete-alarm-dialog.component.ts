@@ -23,5 +23,4 @@ import { AlarmWithId } from '@entities/alarm';
 })
 export class DeleteAlarmDialogComponent {
     public readonly data: { alarmWithId: AlarmWithId } = inject<{ alarmWithId: AlarmWithId }>(MAT_DIALOG_DATA);
-
 }
