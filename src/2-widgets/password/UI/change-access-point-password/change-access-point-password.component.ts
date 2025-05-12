@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { MatCard, MatCardTitle } from '@angular/material/card';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatFormField, MatInput } from '@angular/material/input';
 import { AuthService } from '@shared';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'widget-change-access-point-password',
@@ -17,6 +18,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
         MatButton,
         MatInput,
         MatFormFieldModule,
+        MatIcon,
+        MatIconButton,
     ],
   templateUrl: './change-access-point-password.component.html',
   styleUrl: './change-access-point-password.component.css',
@@ -24,6 +27,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 export class ChangeAccessPointPasswordComponent {
     protected form: FormGroup;
     protected loading: boolean = false;
+    protected passwordVisible: boolean = false;
 
     public constructor(private readonly fb: FormBuilder, private readonly authService: AuthService, private readonly snackBar: MatSnackBar) {
         this.form = this.fb.group({

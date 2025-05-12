@@ -4,8 +4,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatFormField, MatInput } from '@angular/material/input';
 import { AuthService } from '@shared';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'widget-change-user-password',
@@ -17,6 +18,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
         MatButton,
         MatFormFieldModule,
         MatCardTitle,
+        MatIconButton,
+        MatIcon,
     ],
     templateUrl: './change-user-password.component.html',
     styleUrl: './change-user-password.component.css',
@@ -24,6 +27,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 export class ChangeUserPasswordComponent {
     protected form: FormGroup;
     protected loading: boolean = false;
+    protected passwordVisible: boolean = false;
 
     public constructor(private readonly fb: FormBuilder, private readonly authService: AuthService, private readonly snackBar: MatSnackBar) {
         this.form = this.fb.group({

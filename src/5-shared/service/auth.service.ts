@@ -41,11 +41,11 @@ export class AuthService {
         localStorage.removeItem(ACCESS_TOKEN_KEY_HEADER);
     }
 
-    public async changeUserPassword(password: string): Promise<void> {
-        return firstValueFrom(this.http.patch<undefined>('/api/v1/user/password', { password, }, { headers: authHeader(), }));
+    public async changeUserPassword(password: string): Promise<string> {
+        return firstValueFrom(this.http.patch('/api/v1/user/password', { password, }, { headers: authHeader(), responseType: 'text', }));
     }
 
-    public async changeAccessPointPassword(password: string): Promise<void> {
-        return firstValueFrom(this.http.patch<undefined>('/api/v1/access-point/password', { password, }, { headers: authHeader(), }));
+    public async changeAccessPointPassword(password: string): Promise<string> {
+        return firstValueFrom(this.http.patch('/api/v1/access-point/password', { password, }, { headers: authHeader(), responseType: 'text', }));
     }
 }

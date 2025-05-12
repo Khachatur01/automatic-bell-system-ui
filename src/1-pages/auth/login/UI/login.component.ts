@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { MatCard, MatCardTitle } from '@angular/material/card';
 import { MatFormField, MatInput } from '@angular/material/input';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@shared';
 import { Router } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'page-login',
@@ -18,6 +19,8 @@ import { Router } from '@angular/router';
         MatFormField,
         MatFormFieldModule,
         ReactiveFormsModule,
+        MatIcon,
+        MatIconButton,
     ],
     templateUrl: './login.component.html',
     styleUrl: './login.component.css',
@@ -25,6 +28,7 @@ import { Router } from '@angular/router';
 export class LoginComponent {
     protected form: FormGroup;
     protected loading: boolean = false;
+    protected passwordVisible: boolean = false;
 
     public constructor(
         private readonly fb: FormBuilder,
