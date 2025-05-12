@@ -5,11 +5,13 @@
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --port 4202 --proxy-config proxy/localhost-proxy.json",
     "build": "ng build",
+    "build-prod": "ng build --configuration production --output-hashing none",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
   "private": true,
   "dependencies": {
+    "@angular-builders/custom-webpack": "^19.0.1",
     "@angular/cdk": "^19.2.11",
     "@angular/common": "^19.2.0",
     "@angular/compiler": "^19.2.0",
