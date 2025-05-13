@@ -10,3 +10,4 @@ export { JoinPipe } from './pipe/join.pipe';
 
 export { authHeader } from './service/auth.service';
 
+export { API } from './constants';

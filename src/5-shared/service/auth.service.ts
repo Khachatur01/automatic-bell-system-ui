@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { API } from '@shared/constants';
 
 const ACCESS_TOKEN_KEY_HEADER: string = 'Access-Token';
 
@@ -19,7 +20,7 @@ export class AuthService {
     public constructor(private readonly http: HttpClient) {}
 
     public async login(password: string): Promise<string> {
-        const token: string = await firstValueFrom(this.http.post('/api/v1/login', { password, }, { responseType: 'text', }));
+        const token: string = await firstValueFrom(this.http.post(`${ API }/login`, { password, }, { responseType: 'text', }));
 
         localStorage.setItem(ACCESS_TOKEN_KEY_HEADER, token);
 
@@ -28,7 +29,7 @@ export class AuthService {
 
     public async isAccessTokenValid(): Promise<boolean> {
         try {
-            await firstValueFrom(this.http.post('/api/v1/access-token-validity', {}, { headers: authHeader(), responseType: 'text', }));
+            await firstValueFrom(this.http.post(`${ API }/access-token-validity`, {}, { headers: authHeader(), responseType: 'text', }));
             return true;
         } catch (error) {
             console.error(error);
@@ -42,10 +43,10 @@ export class AuthService {
     }
 
     public async changeUserPassword(password: string): Promise<string> {
-        return firstValueFrom(this.http.patch('/api/v1/user/password', { password, }, { headers: authHeader(), responseType: 'text', }));
+        return firstValueFrom(this.http.patch(`${ API }/user/password`, { password, }, { headers: authHeader(), responseType: 'text', }));
     }
 
     public async changeAccessPointPassword(password: string): Promise<string> {
-        return firstValueFrom(this.http.patch('/api/v1/access-point/password', { password, }, { headers: authHeader(), responseType: 'text', }));
+        return firstValueFrom(this.http.patch(`${ API }/access-point/password`, { password, }, { headers: authHeader(), responseType: 'text', }));
     }
 }

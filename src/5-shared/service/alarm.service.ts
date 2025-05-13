@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Alarm, AlarmWithId } from '@entities/alarm';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
-import { authHeader } from '@shared';
+import { API, authHeader } from '@shared';
 
 @Injectable({
     providedIn: 'root',
@@ -11,11 +11,11 @@ export class AlarmService {
     public constructor(private readonly http: HttpClient) {}
 
     public async getValidOutputIndexes(): Promise<number[]> {
-        return firstValueFrom(this.http.get<number[]>('/api/v1/alarm/output_indices', { headers: authHeader(), }));
+        return firstValueFrom(this.http.get<number[]>(`${ API }/alarm/output_indices`, { headers: authHeader(), }));
     }
 
     public async getAlarms(outputIndex: number): Promise<AlarmWithId[]> {
-        return firstValueFrom(this.http.get<AlarmWithId[]>('/api/v1/alarms', { params: { output_index: outputIndex, }, headers: authHeader(), }));
+        return firstValueFrom(this.http.get<AlarmWithId[]>(`${ API }/alarms`, { params: { output_index: outputIndex, }, headers: authHeader(), }));
         // return [
         //     {
         //         id: {
@@ -150,7 +150,7 @@ export class AlarmService {
 
     public async createAlarm(outputIndex: number, alarm: Alarm): Promise<void> {
         await lastValueFrom(this.http.post(
-            '/api/v1/alarm',
+            `${ API }/alarm`,
             alarm,
             {
                 params: { output_index: outputIndex, },
@@ -161,7 +161,7 @@ export class AlarmService {
 
     public async deleteAlarm(outputIndex: number, identifier: string): Promise<void> {
         await lastValueFrom(this.http.delete(
-            '/api/v1/alarm',
+            `${ API }/alarm`,
             {
                 params: { output_index: outputIndex, identifier, },
                 headers: authHeader(), responseType: 'text',
@@ -171,7 +171,7 @@ export class AlarmService {
 
     public async deleteAlarms(outputIndex: number): Promise<void> {
         await lastValueFrom(this.http.delete(
-            '/api/v1/alarms',
+            `${ API }/alarms`,
             {
                 params: { output_index: outputIndex, },
                 headers: authHeader(),

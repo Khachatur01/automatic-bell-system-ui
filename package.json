@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --port 4202 --proxy-config proxy/localhost-proxy.json",
     "build": "ng build",
+    "build-dev": "ng build --configuration development",
     "build-prod": "ng build --configuration production --output-hashing none",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
